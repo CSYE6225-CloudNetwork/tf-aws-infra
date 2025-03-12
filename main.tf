@@ -9,6 +9,6 @@ terraform {
 }
 # main.tf
 # Get available AZs in the region
-data "aws_availability_zones" "available" {
+data "aws_availability_zonesrf4rf4rf4rf4" "available" {
   state = "available"
 }
