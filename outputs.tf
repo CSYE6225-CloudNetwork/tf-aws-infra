@@ -22,3 +22,11 @@ output "public_route_table_id" {
 output "private_route_table_id" {
   value = aws_route_table.private.id
 }
+
+output "rds_endpoint" {
+  value = aws_db_instance.csye6225.endpoint
+}
+
+output "s3_bucket_id" {
+  value = aws_s3_bucket.attachments.bucket
+}

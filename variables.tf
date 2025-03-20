@@ -43,3 +43,23 @@ variable "aws_key_name" {
   description = "aws ami key name"
   type        = string
 }
+
+variable "rds_identifier" {
+  description = "RDS Instance Identifier"
+  type        = string
+}
+
+# variable "aws_account_id" {
+#   description = "AWS account Identifier - DEV/DEMO"
+#   type        = string
+# }
+
+variable "password" {
+  description = "RDS user password"
+  type        = string
+}
+
+variable "username" {
+  description = "RDS username"
+  type        = string
+}
