@@ -18,7 +18,7 @@ resource "aws_iam_role" "ec2_role" {
 resource "aws_iam_policy" "ec2_policy" {
   name        = "ec2_policy"
   description = "Policy for EC2 to access S3 and RDS"
-  policy      = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
@@ -28,7 +28,7 @@ resource "aws_iam_policy" "ec2_policy" {
           "s3:PutObject",
           "s3:DeleteObject"
         ]
-        Effect   = "Allow"
+        Effect = "Allow"
         Resource = [
           "arn:aws:s3:::${aws_s3_bucket.attachments.id}",
           "arn:aws:s3:::${aws_s3_bucket.attachments.id}/*"

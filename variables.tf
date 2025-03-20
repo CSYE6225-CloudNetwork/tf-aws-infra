@@ -56,10 +56,10 @@ variable "rds_identifier" {
 
 variable "password" {
   description = "RDS user password"
-  type = string
+  type        = string
 }
 
 variable "username" {
   description = "RDS username"
-  type = string
+  type        = string
 }

@@ -1,7 +1,7 @@
 resource "random_uuid" "bucket_name" {}
 
 resource "aws_s3_bucket" "attachments" {
-  bucket = random_uuid.bucket_name.result
+  bucket        = random_uuid.bucket_name.result
   force_destroy = true
   tags = {
     Name = "Attachments-Bucket"
@@ -24,7 +24,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecycle" {
   bucket = aws_s3_bucket.attachments.id
 
   rule {
-    id = "transition-to-IA"
+    id     = "transition-to-IA"
     status = "Enabled"
 
     transition {

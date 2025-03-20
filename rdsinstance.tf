@@ -1,12 +1,12 @@
 resource "aws_db_instance" "csye6225" {
-  identifier             = var.rds_identifier
-  allocated_storage = 10
-  db_name           = "csye6225"
-  engine            = "mysql"
-  engine_version    = "8.0"
-  instance_class    = "db.t3.micro"
-  username          = var.username
-  password          = var.password
+  identifier           = var.rds_identifier
+  allocated_storage    = 10
+  db_name              = "csye6225"
+  engine               = "mysql"
+  engine_version       = "8.0"
+  instance_class       = "db.t3.micro"
+  username             = var.username
+  password             = var.password
   parameter_group_name = aws_db_parameter_group.mysql_pg.name
 
   db_subnet_group_name   = aws_db_subnet_group.csye6225_db_subnet.name
@@ -24,12 +24,12 @@ resource "aws_db_instance" "csye6225" {
 
 resource "aws_db_subnet_group" "csye6225_db_subnet" {
   name        = "csye6225-db-subnet-group"
-   description = "Private subnet group for CSYE6225 RDS"
-#  description = "PUBLIC subnet group for CSYE6225 RDS"
+  description = "Private subnet group for CSYE6225 RDS"
+  #  description = "PUBLIC subnet group for CSYE6225 RDS"
 
   # Use all private subnets dynamically
-   subnet_ids = aws_subnet.private[*].id
-#  subnet_ids = aws_subnet.public[*].id
+  subnet_ids = aws_subnet.private[*].id
+  #  subnet_ids = aws_subnet.public[*].id
   tags = {
     Name = "csye6225-db-subnet-group"
   }
