@@ -41,6 +41,7 @@ resource "aws_instance" "app_server" {
 
   # Start the application (adjust with your application startup command)
   sudo systemctl start csye6225
+  sudo systemctl restart amazon-cloudwatch-agent
 EOF
 
 
