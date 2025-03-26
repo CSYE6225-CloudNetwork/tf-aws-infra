@@ -34,6 +34,7 @@ resource "aws_instance" "app_server" {
   password=${var.password}
   S3_BUCKET_NAME=$S3Bucket
   aws_region=$AWS_REGION
+  LOG_FILE_PATH=${var.LOG_FILE_PATH}
   EOL
 
   echo "Database configuration saved!"

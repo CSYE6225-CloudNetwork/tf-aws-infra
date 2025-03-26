@@ -63,3 +63,9 @@ variable "username" {
   description = "RDS username"
   type        = string
 }
+
+variable "LOG_FILE_PATH" {
+  description = "log file path"
+  type        = string
+  default     = "/opt/csye6225/application.log"
+}
