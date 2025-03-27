@@ -72,6 +72,6 @@ variable "LOG_FILE_PATH" {
 
 variable "hostDomain" {
   description = "host domain name"
-  type=string
-  default="dev.aryaa-hanamar.me"
+  type        = string
+  default     = "dev.aryaa-hanamar.me"
 }
