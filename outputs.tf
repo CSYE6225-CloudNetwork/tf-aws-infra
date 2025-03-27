@@ -30,3 +30,6 @@ output "rds_endpoint" {
 output "s3_bucket_id" {
   value = aws_s3_bucket.attachments.bucket
 }
+output "ec2_public_ip" {
+  value = aws_instance.app_server.public_ip
+}

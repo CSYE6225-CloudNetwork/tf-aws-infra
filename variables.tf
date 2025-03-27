@@ -69,3 +69,9 @@ variable "LOG_FILE_PATH" {
   type        = string
   default     = "/opt/csye6225/application.log"
 }
+
+variable "hostDomain" {
+  description = "host domain name"
+  type        = string
+  default     = "dev.aryaa-hanamar.me"
+}
