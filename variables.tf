@@ -75,3 +75,33 @@ variable "hostDomain" {
   type        = string
   default     = "dev.aryaa-hanamar.me"
 }
+
+variable "cpu_low_thresh" {
+  description = "cpu low threshld"
+  type        = number
+  default     = 3
+}
+
+variable "cpu_high_thresh" {
+  description = "cpu high threshld"
+  type        = number
+  default     = 5
+}
+
+variable "desired_capacity" {
+  description = "desired capacity of instance"
+  type        = number
+  default     = 3
+}
+
+variable "max_size" {
+  description = "max_size of instance"
+  type        = number
+  default     = 5
+}
+
+variable "min_size" {
+  description = "min size of instance"
+  type        = number
+  default     = 3
+}
