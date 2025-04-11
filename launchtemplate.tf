@@ -1,5 +1,7 @@
 resource "aws_launch_template" "csye6225_asg" {
+
   name          = "csye6225_asg_launch_template"
+
   image_id      = var.aws_ami_id
   instance_type = var.aws_instance_type
   key_name      = var.aws_key_name
@@ -15,6 +17,7 @@ resource "aws_launch_template" "csye6225_asg" {
 
   user_data = base64encode(<<-EOF
   #!/bin/bash
+
 
   # Add debugging
   exec > >(tee /var/log/user-data.log) 2>&1
@@ -63,10 +66,12 @@ resource "aws_launch_template" "csye6225_asg" {
   database=jdbc:mysql://$RDS_ENDPOINT/csye6225
   username=$DB_USERNAME
   password=$DB_PASSWORD
+
   S3_BUCKET_NAME=$S3Bucket
   aws_region=$AWS_REGION
   LOG_FILE_PATH=${var.LOG_FILE_PATH}
   EOL
+
 
   # Verify the file was created
   echo "Verifying file creation:"
@@ -77,6 +82,7 @@ resource "aws_launch_template" "csye6225_asg" {
   sudo systemctl restart amazon-cloudwatch-agent || echo "Failed to restart cloudwatch agent"
 
   echo "User data script completed"
+
   EOF
   )
 

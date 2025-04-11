@@ -85,24 +85,31 @@ variable "cpu_low_thresh" {
 variable "cpu_high_thresh" {
   description = "cpu high threshld"
   type        = number
-  default     = 1
+
+  default     = 5
+
 }
 
 variable "desired_capacity" {
   description = "desired capacity of instance"
   type        = number
-  default     = 1
+
+  default     = 3
+
 }
 
 variable "max_size" {
   description = "max_size of instance"
   type        = number
-  default     = 1
+
+  default     = 5
+
 }
 
 variable "min_size" {
   description = "min size of instance"
   type        = number
+
   default     = 1
 }
 
@@ -116,4 +123,5 @@ variable "use_existing_secret" {
   description = "Whether to use an existing secret in Secrets Manager"
   type        = bool
   default     = false # Set to true when you've created the secret manually
+
 }

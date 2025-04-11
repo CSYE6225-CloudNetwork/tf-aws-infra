@@ -30,6 +30,15 @@ output "rds_endpoint" {
 output "s3_bucket_id" {
   value = aws_s3_bucket.attachments.bucket
 }
-output "ec2_public_ip" {
-  value = aws_instance.app_server.public_ip
+# output "ec2_public_ip" {
+#   value = aws_instance.app_server.public_ip
+# }
+
+output "load_balancer_dns" {
+  value       = aws_lb.webapp_lb.dns_name
+  description = "Public DNS of the Application Load Balancer"
+}
+
+output "asg_instances" {
+  value = aws_autoscaling_group.asg.id
 }
