@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_iam_role" "ec2_role" {
   name = "ec2_role"
 
@@ -17,10 +19,11 @@ resource "aws_iam_role" "ec2_role" {
 
 resource "aws_iam_policy" "ec2_policy" {
   name        = "ec2_policy"
-  description = "Policy for EC2 to access S3 and RDS"
+  description = "Policy for EC2 to access S3, RDS, and KMS"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      # Existing S3 permissions
       {
         Action = [
           "s3:ListBucket",
@@ -34,17 +37,34 @@ resource "aws_iam_policy" "ec2_policy" {
           "arn:aws:s3:::${aws_s3_bucket.attachments.id}/*"
         ]
       },
+      # Existing RDS permissions
       {
         Action = [
           "rds:DescribeDBInstances"
         ]
         Effect   = "Allow"
         Resource = "*"
+      },
+      # Add KMS permissions for EBS volume encryption
+      {
+        Action = [
+          "kms:CreateGrant",
+          "kms:Decrypt",
+          "kms:DescribeKey",
+          "kms:GenerateDataKeyWithoutPlainText",
+          "kms:ReEncrypt*" # Include both ReEncrypt and ReEncryptFrom/To
+        ]
+        Effect = "Allow"
+        Resource = [
+          data.aws_kms_key.ec2_key.arn,
+          data.aws_kms_key.rds_key.arn,
+          data.aws_kms_key.s3_key.arn,
+          data.aws_kms_key.secrets_key.arn
+        ]
       }
     ]
   })
 }
-
 resource "aws_iam_role_policy_attachment" "ec2_policy_attachment" {
   role       = aws_iam_role.ec2_role.name
   policy_arn = aws_iam_policy.ec2_policy.arn
@@ -60,3 +80,50 @@ resource "aws_iam_role_policy_attachment" "cloudwatch_agent_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
 }
 
+# Policy for Terraform to access KMS
+resource "aws_iam_policy" "terraform_kms_access" {
+  name        = "terraform_kms_access"
+  description = "Allow Terraform to access KMS keys"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "kms:CreateKey",
+          "kms:DescribeKey",
+          "kms:ListKeys",
+          "kms:EnableKey",
+          "kms:EnableKeyRotation",
+          "kms:CreateAlias",
+          "kms:GenerateDataKey",
+          "kms:Encrypt",
+          "kms:Decrypt"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy" "secrets_access" {
+  name = "secrets-access"
+  role = aws_iam_role.ec2_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "secretsmanager:GetSecretValue",
+          "kms:Decrypt",
+        ]
+        Effect = "Allow"
+        Resource = [
+          data.aws_kms_key.secrets_key.arn,
+          "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:db-password-secret*"
+        ]
+      }
+    ]
+  })
+}

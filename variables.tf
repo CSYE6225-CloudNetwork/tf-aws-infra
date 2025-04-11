@@ -75,3 +75,45 @@ variable "hostDomain" {
   type        = string
   default     = "dev.aryaa-hanamar.me"
 }
+
+variable "cpu_low_thresh" {
+  description = "cpu low threshld"
+  type        = number
+  default     = 3
+}
+
+variable "cpu_high_thresh" {
+  description = "cpu high threshld"
+  type        = number
+  default     = 1
+}
+
+variable "desired_capacity" {
+  description = "desired capacity of instance"
+  type        = number
+  default     = 1
+}
+
+variable "max_size" {
+  description = "max_size of instance"
+  type        = number
+  default     = 1
+}
+
+variable "min_size" {
+  description = "min size of instance"
+  type        = number
+  default     = 1
+}
+
+variable "secret_exists" {
+  description = "Whether the secrets manager secret already exists"
+  type        = bool
+  default     = false
+}
+
+variable "use_existing_secret" {
+  description = "Whether to use an existing secret in Secrets Manager"
+  type        = bool
+  default     = false # Set to true when you've created the secret manually
+}
