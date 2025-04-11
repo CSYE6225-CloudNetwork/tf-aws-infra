@@ -1,6 +1,6 @@
 resource "aws_launch_template" "csye6225_asg" {
 
-  name          = "csye6225_asg_launch_template"
+  name = "csye6225_asg_launch_template"
 
   image_id      = var.aws_ami_id
   instance_type = var.aws_instance_type

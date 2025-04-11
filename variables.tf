@@ -86,7 +86,7 @@ variable "cpu_high_thresh" {
   description = "cpu high threshld"
   type        = number
 
-  default     = 5
+  default = 5
 
 }
 
@@ -94,7 +94,7 @@ variable "desired_capacity" {
   description = "desired capacity of instance"
   type        = number
 
-  default     = 3
+  default = 3
 
 }
 
@@ -102,7 +102,7 @@ variable "max_size" {
   description = "max_size of instance"
   type        = number
 
-  default     = 5
+  default = 5
 
 }
 
@@ -110,7 +110,7 @@ variable "min_size" {
   description = "min size of instance"
   type        = number
 
-  default     = 1
+  default = 1
 }
 
 variable "secret_exists" {
