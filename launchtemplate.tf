@@ -7,7 +7,7 @@ resource "aws_launch_template" "csye6225_asg" {
   key_name      = var.aws_key_name
 
   block_device_mappings {
-    device_name = "/dev/xvda" # Root volume device name for Amazon Linux 2
+    device_name = "/dev/sda1"
     ebs {
       volume_size           = 25
       volume_type           = "gp2"
