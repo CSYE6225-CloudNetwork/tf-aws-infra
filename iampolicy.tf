@@ -37,30 +37,43 @@ resource "aws_iam_policy" "ec2_policy" {
           "arn:aws:s3:::${aws_s3_bucket.attachments.id}/*"
         ]
       },
-      # Existing RDS permissions
+      # Updated KMS permissions - ensure all required permissions are included
       {
-        Action = [
-          "rds:DescribeDBInstances"
-        ]
-        Effect   = "Allow"
-        Resource = "*"
-      },
-      # Add KMS permissions for EBS volume encryption
-      {
+        Effect = "Allow"
         Action = [
           "kms:CreateGrant",
           "kms:Decrypt",
           "kms:DescribeKey",
-          "kms:GenerateDataKeyWithoutPlainText",
-          "kms:ReEncrypt*" # Include both ReEncrypt and ReEncryptFrom/To
+          "kms:GenerateDataKey",
+          "kms:GenerateDataKeyWithoutPlaintext",
+          "kms:ReEncrypt*"
         ]
-        Effect = "Allow"
         Resource = [
           data.aws_kms_key.ec2_key.arn,
           data.aws_kms_key.rds_key.arn,
           data.aws_kms_key.s3_key.arn,
           data.aws_kms_key.secrets_key.arn
         ]
+      },
+      # EC2 permissions (unchanged)
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:RunInstances",
+          "ec2:CreateVolume"
+        ]
+        Resource = [
+          "arn:aws:ec2:${var.aws_region}:${data.aws_caller_identity.current.account_id}:instance/*",
+          "arn:aws:ec2:${var.aws_region}:${data.aws_caller_identity.current.account_id}:volume/*"
+        ]
+      },
+      # RDS permissions (unchanged)
+      {
+        Action = [
+          "rds:DescribeDBInstances"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
       }
     ]
   })
@@ -122,6 +135,50 @@ resource "aws_iam_role_policy" "secrets_access" {
         Resource = [
           data.aws_kms_key.secrets_key.arn,
           "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:db-password-secret*"
+        ]
+      }
+    ]
+  })
+}
+
+
+
+resource "aws_kms_grant" "asg_grant" {
+  name              = "asg-service-grant"
+  key_id            = data.aws_kms_key.ec2_key.id  # Using your existing key reference
+  grantee_principal = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
+  operations        = [
+    "Encrypt",
+    "Decrypt",
+    "GenerateDataKey",
+    "GenerateDataKeyWithoutPlaintext",
+    "ReEncryptFrom",
+    "ReEncryptTo",
+    "DescribeKey",
+    "CreateGrant"
+  ]
+}
+
+resource "aws_iam_role_policy" "kms_unified_access" {
+  name = "kms_unified_access"
+  role = aws_iam_role.ec2_role.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "kms:Decrypt",
+          "kms:GenerateDataKey*",
+          "kms:CreateGrant",
+          "kms:DescribeKey",
+          "kms:ReEncrypt*"
+        ]
+        Resource = [
+          data.aws_kms_key.ec2_key.arn,
+          data.aws_kms_key.rds_key.arn,
+          data.aws_kms_key.s3_key.arn,
+          data.aws_kms_key.secrets_key.arn,
         ]
       }
     ]
