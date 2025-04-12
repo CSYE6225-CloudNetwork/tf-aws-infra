@@ -6,6 +6,16 @@ resource "aws_launch_template" "csye6225_asg" {
   instance_type = var.aws_instance_type
   key_name      = var.aws_key_name
 
+  block_device_mappings {
+    device_name = "/dev/xvda" # Root volume device name for Amazon Linux 2
+    ebs {
+      volume_size           = 25
+      volume_type           = "gp2"
+      delete_on_termination = true
+      encrypted             = true
+      kms_key_id            = data.aws_kms_key.ec2_key.arn
+    }
+  }
   network_interfaces {
     associate_public_ip_address = true
     security_groups             = [aws_security_group.app_sg.id]
