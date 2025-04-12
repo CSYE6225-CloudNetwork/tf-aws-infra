@@ -145,9 +145,9 @@ resource "aws_iam_role_policy" "secrets_access" {
 
 resource "aws_kms_grant" "asg_grant" {
   name              = "asg-service-grant"
-  key_id            = data.aws_kms_key.ec2_key.id  # Using your existing key reference
+  key_id            = data.aws_kms_key.ec2_key.id # Using your existing key reference
   grantee_principal = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling"
-  operations        = [
+  operations = [
     "Encrypt",
     "Decrypt",
     "GenerateDataKey",
